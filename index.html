@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MW App – Lightweight multipurpose web utility</title>
+<meta name="description" content="MW App is a lightweight, multipurpose web utility: text converter, unit converter, JSON formatter, color palettes, Markdown preview, Base64, password and QR code generators. All in your browser.">
+<meta name="theme-color" content="#f7f8fb">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f5bea'/%3E%3Ctext x='16' y='22' font-size='15' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'%3EMW%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to tool</a>
+<header class="site-header">
+  <div class="wrap">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">MW</span>
+      <div>
+        <h1>MW App</h1>
+        <p class="tagline">A lightweight, multipurpose web utility for quick tasks.</p>
+      </div>
+    </div>
+    <nav aria-label="Tools">
+      <ul id="nav" class="nav">
+        <li><button type="button" data-tool="text">Text</button></li>
+        <li><button type="button" data-tool="units">Units</button></li>
+        <li><button type="button" data-tool="json">JSON</button></li>
+        <li><button type="button" data-tool="color">Color</button></li>
+        <li><button type="button" data-tool="markdown">Markdown</button></li>
+        <li><button type="button" data-tool="base64">Base64</button></li>
+        <li><button type="button" data-tool="password">Password</button></li>
+        <li><button type="button" data-tool="qr">QR code</button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap" tabindex="-1">
+
+  <!-- TEXT -->
+  <section class="tool card" id="tool-text" aria-labelledby="h-text" hidden>
+    <h2 id="h-text">Text converter</h2>
+    <p class="hint">Change case, reverse text and see live word counts.</p>
+    <label for="text-in">Your text</label>
+    <textarea id="text-in" rows="6" placeholder="Type or paste some text here…"></textarea>
+    <div class="stats" id="text-stats" aria-live="polite"></div>
+    <div class="btn-row" role="group" aria-label="Conversions">
+      <button type="button" data-conv="upper">UPPERCASE</button>
+      <button type="button" data-conv="lower">lowercase</button>
+      <button type="button" data-conv="title">Title Case</button>
+      <button type="button" data-conv="sentence">Sentence case</button>
+      <button type="button" data-conv="reverse">Reverse text</button>
+      <button type="button" data-conv="reversewords">Reverse words</button>
+      <button type="button" data-conv="spaces">Trim extra spaces</button>
+    </div>
+    <label for="text-out">Result</label>
+    <textarea id="text-out" rows="6" readonly placeholder="Choose a conversion above to see the result."></textarea>
+    <div class="btn-row">
+      <button type="button" class="primary" id="text-copy">Copy result</button>
+      <button type="button" id="text-use">Use result as input</button>
+      <button type="button" id="text-clear">Clear</button>
+    </div>
+  </section>
+
+  <!-- UNITS -->
+  <section class="tool card" id="tool-units" aria-labelledby="h-units" hidden>
+    <h2 id="h-units">Unit converter</h2>
+    <p class="hint">Convert length, weight, temperature and volume.</p>
+    <div class="grid-2">
+      <div>
+        <label for="u-cat">Category</label>
+        <select id="u-cat">
+          <option value="length">Length</option>
+          <option value="weight">Weight</option>
+          <option value="temperature">Temperature</option>
+          <option value="volume">Volume</option>
+        </select>
+      </div>
+      <div>
+        <label for="u-val">Value</label>
+        <input id="u-val" type="text" inputmode="decimal" autocomplete="off" value="1">
+      </div>
+    </div>
+    <div class="grid-swap">
+      <div>
+        <label for="u-from">From</label>
+        <select id="u-from"></select>
+      </div>
+      <button type="button" id="u-swap" class="swap" aria-label="Swap units">⇄</button>
+      <div>
+        <label for="u-to">To</label>
+        <select id="u-to"></select>
+      </div>
+    </div>
+    <div class="result-box" id="u-result" aria-live="polite"></div>
+    <p class="error" id="u-error" role="alert"></p>
+    <h3>All units</h3>
+    <div class="table-wrap"><table id="u-table"><tbody></tbody></table></div>
+  </section>
+
+  <!-- JSON -->
+  <section class="tool card" id="tool-json" aria-labelledby="h-json" hidden>
+    <h2 id="h-json">JSON formatter &amp; validator</h2>
+    <p class="hint">Paste JSON to validate it, pretty-print it or minify it.</p>
+    <label for="json-in">JSON input</label>
+    <textarea id="json-in" rows="8" spellcheck="false" placeholder='{"name":"MW App","tools":8}'></textarea>
+    <div class="btn-row">
+      <button type="button" class="primary" id="json-format">Format</button>
+      <button type="button" id="json-minify">Minify</button>
+      <button type="button" id="json-sort">Sort keys</button>
+      <button type="button" id="json-validate">Validate</button>
+      <label class="inline" for="json-indent">Indent
+        <select id="json-indent">
+          <option value="2">2 spaces</option>
+          <option value="4">4 spaces</option>
+          <option value="tab">Tab</option>
+        </select>
+      </label>
+    </div>
+    <div class="status" id="json-status" role="status" aria-live="polite"></div>
+    <label for="json-out">Output</label>
+    <textarea id="json-out" rows="8" readonly spellcheck="false" placeholder="Formatted JSON appears here."></textarea>
+    <div class="btn-row">
+      <button type="button" id="json-copy">Copy output</button>
+      <button type="button" id="json-use">Use output as input</button>
+      <button type="button" id="json-clear">Clear</button>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section class="tool card" id="tool-color" aria-labelledby="h-color" hidden>
+    <h2 id="h-color">Color picker &amp; palette generator</h2>
+    <p class="hint">Pick a color, get its codes and build a matching palette.</p>
+    <div class="color-top">
+      <div>
+        <label for="c-pick">Pick a color</label>
+        <input id="c-pick" type="color" value="#2f5bea">
+      </div>
+      <div>
+        <label for="c-hex">Hex code</label>
+        <input id="c-hex" type="text" maxlength="7" value="#2f5bea" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="btn-row tight">
+        <button type="button" id="c-random">Random</button>
+        <button type="button" id="c-save">Save color</button>
+      </div>
+    </div>
+    <p class="error" id="c-error" role="alert"></p>
+    <div class="color-preview" id="c-preview" aria-hidden="true"></div>
+    <div class="codes" id="c-codes"></div>
+    <div class="grid-2">
+      <div>
+        <label for="c-scheme">Palette type</label>
+        <select id="c-scheme">
+          <option value="analogous">Analogous</option>
+          <option value="complementary">Complementary</option>
+          <option value="triadic">Triadic</option>
+          <option value="tetradic">Tetradic</option>
+          <option value="mono">Monochromatic</option>
+          <option value="shades">Tints &amp; shades</option>
+        </select>
+      </div>
+      <div class="btn-row tight align-end">
+        <button type="button" id="c-copyall">Copy palette</button>
+      </div>
+    </div>
+    <div class="swatches" id="c-palette"></div>
+    <h3>Saved colors</h3>
+    <div class="swatches small" id="c-saved"></div>
+    <p class="hint" id="c-saved-empty">No saved colors yet. Use “Save color” to keep your favorites.</p>
+  </section>
+
+  <!-- MARKDOWN -->
+  <section class="tool card" id="tool-markdown" aria-labelledby="h-md" hidden>
+    <h2 id="h-md">Markdown to HTML</h2>
+    <p class="hint">Write Markdown on the left, see the preview or the HTML source.</p>
+    <label for="md-in">Markdown</label>
+    <textarea id="md-in" rows="10" spellcheck="false" placeholder="# Hello&#10;Write **Markdown** here…"></textarea>
+    <div class="btn-row">
+      <div class="seg" role="group" aria-label="View">
+        <button type="button" id="md-view-preview" aria-pressed="true">Preview</button>
+        <button type="button" id="md-view-html" aria-pressed="false">HTML source</button>
+      </div>
+      <button type="button" class="primary" id="md-copy">Copy HTML</button>
+      <button type="button" id="md-sample">Load sample</button>
+      <button type="button" id="md-clear">Clear</button>
+    </div>
+    <div class="md-preview" id="md-preview" aria-live="polite"></div>
+    <textarea id="md-html" rows="10" readonly spellcheck="false" hidden aria-label="HTML source"></textarea>
+  </section>
+
+  <!-- BASE64 -->
+  <section class="tool card" id="tool-base64" aria-labelledby="h-b64" hidden>
+    <h2 id="h-b64">Base64 encoder / decoder</h2>
+    <p class="hint">Works with any text, including emoji and accented characters.</p>
+    <div class="btn-row">
+      <div class="seg" role="group" aria-label="Mode">
+        <button type="button" id="b64-enc" aria-pressed="true">Encode</button>
+        <button type="button" id="b64-dec" aria-pressed="false">Decode</button>
+      </div>
+      <label class="check"><input type="checkbox" id="b64-url"> URL-safe</label>
+    </div>
+    <label for="b64-in" id="b64-in-label">Text to encode</label>
+    <textarea id="b64-in" rows="6" spellcheck="false" placeholder="Type or paste here…"></textarea>
+    <p class="error" id="b64-error" role="alert"></p>
+    <label for="b64-out">Result</label>
+    <textarea id="b64-out" rows="6" readonly spellcheck="false" placeholder="The result appears here."></textarea>
+    <div class="btn-row">
+      <button type="button" class="primary" id="b64-copy">Copy result</button>
+      <button type="button" id="b64-swap">Use result as input &amp; switch mode</button>
+      <button type="button" id="b64-clear">Clear</button>
+    </div>
+  </section>
+
+  <!-- PASSWORD -->
+  <section class="tool card" id="tool-password" aria-labelledby="h-pw" hidden>
+    <h2 id="h-pw">Random password generator</h2>
+    <p class="hint">Generated with your browser’s secure random number generator. Nothing is sent anywhere.</p>
+    <label for="pw-out">Generated password</label>
+    <div class="pw-row">
+      <input id="pw-out" type="text" readonly spellcheck="false" autocomplete="off">
+      <button type="button" class="primary" id="pw-copy">Copy</button>
+      <button type="button" id="pw-gen">Regenerate</button>
+    </div>
+    <div class="meter" aria-hidden="true"><span id="pw-bar"></span></div>
+    <div class="status" id="pw-strength" role="status" aria-live="polite"></div>
+    <label for="pw-len">Length: <output id="pw-len-out">16</output></label>
+    <input id="pw-len" type="range" min="6" max="64" value="16">
+    <fieldset>
+      <legend>Characters</legend>
+      <label class="check"><input type="checkbox" id="pw-lower" checked> Lowercase (a–z)</label>
+      <label class="check"><input type="checkbox" id="pw-upper" checked> Uppercase (A–Z)</label>
+      <label class="check"><input type="checkbox" id="pw-digits" checked> Numbers (0–9)</label>
+      <label class="check"><input type="checkbox" id="pw-symbols" checked> Symbols (!@#$…)</label>
+      <label class="check"><input type="checkbox" id="pw-ambig"> Avoid look-alikes (I, l, 1, O, 0)</label>
+    </fieldset>
+    <p class="error" id="pw-error" role="alert"></p>
+  </section>
+
+  <!-- QR -->
+  <section class="tool card" id="tool-qr" aria-labelledby="h-qr" hidden>
+    <h2 id="h-qr">QR code generator</h2>
+    <p class="hint">Turn a link or any text into a QR code you can download as PNG.</p>
+    <label for="qr-in">Text or URL</label>
+    <textarea id="qr-in" rows="3" placeholder="https://example.com"></textarea>
+    <div class="grid-2">
+      <div>
+        <label for="qr-ecc">Error correction</label>
+        <select id="qr-ecc">
+          <option value="0">Low (7%)</option>
+          <option value="1" selected>Medium (15%)</option>
+          <option value="2">Quartile (25%)</option>
+          <option value="3">High (30%)</option>
+        </select>
+      </div>
+      <div>
+        <label for="qr-scale">Size per module: <output id="qr-scale-out">8</output> px</label>
+        <input id="qr-scale" type="range" min="3" max="16" value="8">
+      </div>
+    </div>
+    <p class="error" id="qr-error" role="alert"></p>
+    <div class="qr-stage">
+      <canvas id="qr-canvas" width="10" height="10" role="img" aria-label="Generated QR code" hidden></canvas>
+      <p class="hint" id="qr-empty">Enter some text above to generate a QR code.</p>
+    </div>
+    <div class="status" id="qr-info" aria-live="polite"></div>
+    <div class="btn-row">
+      <button type="button" class="primary" id="qr-download" disabled>Download PNG</button>
+      <button type="button" id="qr-clear">Clear</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer wrap">
+  <p>MW App runs entirely in your browser. Nothing you type leaves your device.</p>
+</footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
